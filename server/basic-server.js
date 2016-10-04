@@ -1,4 +1,6 @@
 /* Import node's http module: */
+var fs = require('fs');
+var fileName = '../client/index.html';
 var http = require('http');
 var requestHandler = require('./request-handler');
 // console.log('http', http);

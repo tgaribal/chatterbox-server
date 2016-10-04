@@ -11,7 +11,9 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-var result = [];
+var fs = require('fs');
+var results = [
+];
 var defaultCorsHeaders = {
   'access-control-allow-origin': '*',
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -22,8 +24,18 @@ var defaultCorsHeaders = {
 
 
 var requestHandler = function(request, response) {
+  // fs.open('./messages.js', 'r+', function() {
+  //   fs.readFile('./messages.js', (err, data) => {
+  //     if (err) {
+  //       throw err;
+  //     }
+  //     console.log('read', data.toString());
+  //     console.log(JSON.parse(data.toString().slice(data.indexOf('=')).slice(0)));
+  //     results = data
+  //   });
+  // });
+  
   // Request and Response come from node's http module.
-
   // They include information about both the incoming request, such as
   // headers and URL, and about the outgoing response, such as its status
   // and content.
@@ -35,7 +47,6 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
-
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
 
@@ -51,7 +62,7 @@ var requestHandler = function(request, response) {
 
   if (request.method === 'POST') {
     request.on('data', function(chunk) {
-      result.push(JSON.parse(chunk));
+      results.push(JSON.parse(chunk));
     });
     response.writeHead(201, headers);
 
@@ -62,7 +73,7 @@ var requestHandler = function(request, response) {
     response.writeHead(404, headers);
   } 
   
-  if (request.url !== '/classes/messages') {
+  if (request.url !== ('/classes/messages')) {
     response.writeHead(404, headers);
   }
 
@@ -74,8 +85,8 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  console.log('response', response.end);
-  response.end(JSON.stringify({results: result}));
+  // results = JSON.stringify(results);
+  response.end(JSON.stringify({results: results}));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
