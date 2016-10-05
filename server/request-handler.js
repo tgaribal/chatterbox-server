@@ -12,8 +12,7 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 var fs = require('fs');
-var results = [
-];
+var results = [];
 var defaultCorsHeaders = {
   'access-control-allow-origin': '*',
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -22,18 +21,8 @@ var defaultCorsHeaders = {
 };
 
 
-
 var requestHandler = function(request, response) {
-  // fs.open('./messages.js', 'r+', function() {
-  //   fs.readFile('./messages.js', (err, data) => {
-  //     if (err) {
-  //       throw err;
-  //     }
-  //     console.log('read', data.toString());
-  //     console.log(JSON.parse(data.toString().slice(data.indexOf('=')).slice(0)));
-  //     results = data
-  //   });
-  // });
+  
   
   // Request and Response come from node's http module.
   // They include information about both the incoming request, such as
@@ -61,12 +50,27 @@ var requestHandler = function(request, response) {
 
 
   if (request.method === 'POST') {
+    var body = '';
     request.on('data', function(chunk) {
-      results.push(JSON.parse(chunk));
+      body += chunk;
+    });
+    request.on('end', function() {
+      fs.readFile('./messages.JSON', function (err, data) {
+        var json = JSON.parse(data);
+        json.push(JSON.parse(body));
+        console.log(json);
+        fs.writeFile('./messages.JSON', JSON.stringify(json));
+      });
     });
     response.writeHead(201, headers);
+    response.end();
 
   } else if (request.method === 'GET' || request.method === 'OPTIONS') {
+    fs.open('./messages.JSON', 'r+', function() {
+      fs.readFile('./messages.JSON', (err, data) => {
+        results = JSON.parse(data.toString());
+      });
+    });
     response.writeHead(200, headers);
 
   } else {
