@@ -10,8 +10,19 @@ var headers = {
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'access-control-allow-headers': 'content-type, accept',
   'access-control-max-age': 10,
-  'Content-Type': 'JSON'
+  'Content-Type': 'application/json'
 };
+
+
+
+app.options('/classes/messages', function (req, res) {  
+  console.log('Serving req type ' + req.method + ' for url ' + req.url);
+  res.writeHead(200, headers);
+  res.end();
+});
+
+
+
 
 
 
@@ -25,14 +36,12 @@ app.get('/classes/messages', function (req, res) {
   });
   res.writeHead(200, headers);
   res.end();
-  
 });
-app.options('/classes/messages', function (req, res) {  
-  console.log('Serving req type ' + req.method + ' for url ' + req.url);
-  res.writeHead(200, headers);
-  res.end();
-  
-});
+
+
+
+
+
 app.post('./messages.JSON', function (req, res) {
   var body = '';
   req.on('data', function(chunk) {
