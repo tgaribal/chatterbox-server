@@ -4,6 +4,7 @@ var http = require('http');
 var fs = require('fs');
 app.use(express.static('./client'));
 
+
 var headers = {
   'access-control-allow-origin': '*',
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -26,7 +27,12 @@ app.get('/classes/messages', function (req, res) {
   res.end();
   
 });
-
+app.options('/classes/messages', function (req, res) {  
+  console.log('Serving req type ' + req.method + ' for url ' + req.url);
+  res.writeHead(200, headers);
+  res.end();
+  
+});
 app.post('./messages.JSON', function (req, res) {
   var body = '';
   req.on('data', function(chunk) {
