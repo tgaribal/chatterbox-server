@@ -60,10 +60,12 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'GET',
-      contentType: 'json',
+      contentType: 'application/json',
       success: function(data) {
-        data = JSON.parse(data);
-        console.log('data', data);
+        // for some reason with express, we dont need to parse,
+        // but with the regular node.js we do *shrug*
+        // data = JSON.parse(data);
+        
         // Don't bother if we have nothing to work with
         if (!data.results || !data.results.length) { return; }
         // Store messages for caching later

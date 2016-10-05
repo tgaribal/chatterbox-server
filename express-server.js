@@ -27,7 +27,6 @@ app.options('/classes/messages', function (req, res) {
 
 
 app.get('/classes/messages', function (req, res) {  
-  var body = '';
   fs.open('./server/messages.JSON', 'r+', function() {
     fs.readFile('./server/messages.JSON', (err, data) => {
       results = JSON.parse(data.toString());
@@ -35,14 +34,14 @@ app.get('/classes/messages', function (req, res) {
     });
   });
   res.writeHead(200, headers);
-  res.end();
+  res.end(JSON.stringify({results: results}));
 });
 
 
 
 
 
-app.post('./messages.JSON', function (req, res) {
+app.post('./server/messages.JSON', function (req, res) {
   var body = '';
   req.on('data', function(chunk) {
     body += chunk;
